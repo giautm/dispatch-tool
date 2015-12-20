@@ -19,7 +19,7 @@ namespace GiauTM.CSharp.TikiRouter
 
         private Hashtable mOrderSession = new Hashtable();
         private delegate void MyAction();
-
+        private int mOrderCount = 0;
         public MainForm()
         {
             InitializeComponent();
@@ -90,6 +90,8 @@ namespace GiauTM.CSharp.TikiRouter
 
                         showMessage(router.name, false);
                         Ultis.playAudio(router.name);
+
+                        lbOrderCount.Text = string.Format("{0} ĐH", ++mOrderCount);
                     }
                     else
                     {
@@ -231,6 +233,8 @@ namespace GiauTM.CSharp.TikiRouter
         {
             mSessions.Clear();
             mOrderSession.Clear();
+            mOrderCount = 0;
+            lbOrderCount.Text = string.Format("{0} ĐH", 0);
 
             listViewSessions.Items.Clear();
             listViewSessions.Groups.Clear();
@@ -254,6 +258,11 @@ namespace GiauTM.CSharp.TikiRouter
                         {
                             session.orders.RemoveAll(o => o.Barcode == barcode);
                             mOrderSession.Remove(barcode);
+
+                            if (mOrderCount > 0)
+                            {
+                                lbOrderCount.Text = string.Format("{0} ĐH", --mOrderCount);
+                            }
                         }
                     }
 

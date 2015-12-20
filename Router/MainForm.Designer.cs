@@ -37,6 +37,8 @@
             this.listViewSessions = new System.Windows.Forms.ListView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuItem_RemoveOrderItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lbOrderCount = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,7 +50,7 @@
             this.txtBarcode.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.txtBarcode.Location = new System.Drawing.Point(13, 61);
             this.txtBarcode.Name = "txtBarcode";
-            this.txtBarcode.Size = new System.Drawing.Size(229, 31);
+            this.txtBarcode.Size = new System.Drawing.Size(211, 31);
             this.txtBarcode.TabIndex = 3;
             this.txtBarcode.Text = "Scan mã ĐH vào đây";
             this.txtBarcode.Click += new System.EventHandler(this.txtBarcode_Click);
@@ -62,7 +64,7 @@
             this.lbMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.lbMessage.Location = new System.Drawing.Point(13, 9);
             this.lbMessage.Name = "lbMessage";
-            this.lbMessage.Size = new System.Drawing.Size(707, 44);
+            this.lbMessage.Size = new System.Drawing.Size(800, 44);
             this.lbMessage.TabIndex = 1;
             this.lbMessage.Text = "Import danh sách đơn hàng để bắt đầu";
             // 
@@ -70,7 +72,7 @@
             // 
             this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btnImport.Location = new System.Drawing.Point(248, 60);
+            this.btnImport.Location = new System.Drawing.Point(341, 60);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(153, 34);
             this.btnImport.TabIndex = 0;
@@ -83,7 +85,7 @@
             this.btnExportSession.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExportSession.Enabled = false;
             this.btnExportSession.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btnExportSession.Location = new System.Drawing.Point(407, 60);
+            this.btnExportSession.Location = new System.Drawing.Point(500, 60);
             this.btnExportSession.Name = "btnExportSession";
             this.btnExportSession.Size = new System.Drawing.Size(153, 34);
             this.btnExportSession.TabIndex = 1;
@@ -96,7 +98,7 @@
             this.btnClearSessions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClearSessions.Enabled = false;
             this.btnClearSessions.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btnClearSessions.Location = new System.Drawing.Point(566, 60);
+            this.btnClearSessions.Location = new System.Drawing.Point(659, 60);
             this.btnClearSessions.Name = "btnClearSessions";
             this.btnClearSessions.Size = new System.Drawing.Size(153, 34);
             this.btnClearSessions.TabIndex = 2;
@@ -117,7 +119,7 @@
             this.listViewSessions.MultiSelect = false;
             this.listViewSessions.Name = "listViewSessions";
             this.listViewSessions.ShowItemToolTips = true;
-            this.listViewSessions.Size = new System.Drawing.Size(706, 407);
+            this.listViewSessions.Size = new System.Drawing.Size(799, 199);
             this.listViewSessions.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewSessions.TabIndex = 6;
             this.listViewSessions.UseCompatibleStateImageBehavior = false;
@@ -138,18 +140,45 @@
             this.menuItem_RemoveOrderItem.Text = "Xoá khỏi phiên";
             this.menuItem_RemoveOrderItem.Click += new System.EventHandler(this.menuItem_RemoveOrderItem_Click);
             // 
+            // lbOrderCount
+            // 
+            this.lbOrderCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbOrderCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.lbOrderCount.Location = new System.Drawing.Point(230, 61);
+            this.lbOrderCount.Name = "lbOrderCount";
+            this.lbOrderCount.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.lbOrderCount.Size = new System.Drawing.Size(105, 31);
+            this.lbOrderCount.TabIndex = 7;
+            this.lbOrderCount.Text = "0 ĐH";
+            this.lbOrderCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.label1.Location = new System.Drawing.Point(12, 303);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(436, 16);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Mẹo: Nhấp đúp vào đơn hàng để mở trên CPN / Nhấp chuột phải để xoá.";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(731, 520);
+            this.ClientSize = new System.Drawing.Size(824, 328);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbOrderCount);
             this.Controls.Add(this.listViewSessions);
             this.Controls.Add(this.btnClearSessions);
             this.Controls.Add(this.btnExportSession);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.lbMessage);
             this.Controls.Add(this.txtBarcode);
+            this.MinimumSize = new System.Drawing.Size(840, 350);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Công cụ phân tuyến";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.contextMenuStrip1.ResumeLayout(false);
@@ -168,6 +197,8 @@
         private System.Windows.Forms.ListView listViewSessions;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem menuItem_RemoveOrderItem;
+        private System.Windows.Forms.Label lbOrderCount;
+        private System.Windows.Forms.Label label1;
     }
 }
 
