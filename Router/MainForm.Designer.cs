@@ -66,7 +66,7 @@
             this.lbMessage.Name = "lbMessage";
             this.lbMessage.Size = new System.Drawing.Size(800, 44);
             this.lbMessage.TabIndex = 1;
-            this.lbMessage.Text = "Import danh sách đơn hàng để bắt đầu";
+            this.lbMessage.Text = "Nhập dữ liệu đơn hàng để bắt đầu";
             // 
             // btnImport
             // 
