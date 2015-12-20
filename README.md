@@ -3,19 +3,26 @@ Công cụ phân tuyến sử dụng C# và Windows Forms
 
 ## Thư viện sử dụng
 
-- [A Fast CSV Reader [LumenWorks.Framework.IO]] (http://www.codeproject.com/Articles/9258/A-Fast-CSV-Reader)
+- [A Fast CSV Reader [LumenWorks.Framework.IO]](http://www.codeproject.com/Articles/9258/A-Fast-CSV-Reader)
 
 ## Danh sách cần làm
 
-- [ ] Nháy đúp chuột trái để mở đơn hàng trong trình duyệt.
+- [x] Nháy đúp chuột trái để mở đơn hàng trong trình duyệt.
+
 - [ ] Xuất riêng lẻ từng phiên bằng cách nhấp chuột phải.
 
 ## Những vấn đề đã biết
 
-- Cỡ chữ ở ListViewGroup quá nhỏ.
-- Khó khăn khi mở phiên đã xuất ở định dạng CSV bằng Excel. Nên chuyển sang dùng *.tsv hoặc *.xls.
+- ~~Cỡ chữ ở ListViewGroup quá nhỏ~~. Vẫn chưa thay đổi được cỡ chữ ở Group.
+- ~~Khó khăn khi mở phiên đã xuất ở định dạng CSV bằng Excel. Nên chuyển sang dùng *.tsv hoặc *.xls.~~
 
 ## Nhật kí thay đổi
+
+### 2015-12-20
+
+- Thêm `sep=,` ở đầu tệp CSV cho phép Excel nhận diện đúng kí tự phân cách field.
+- Tăng cỡ chữ ở ListView.
+- Nháy đúp để mở đơn hàng trong CPN.
 
 ### 2015-12-19
 

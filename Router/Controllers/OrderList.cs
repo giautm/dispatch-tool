@@ -1,5 +1,5 @@
-﻿using LumenWorks.Framework.IO.Csv;
-using GiauTM.CSharp.TikiRouter.Models;
+﻿using GiauTM.CSharp.TikiRouter.Models;
+using LumenWorks.Framework.IO.Csv;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,8 +10,9 @@ namespace GiauTM.CSharp.TikiRouter.Controllers
     class OrderList
     {
         private List<Order> mOrders = new List<Order>();
-        public string[] Headers { get; private set;}
 
+        public string[] Headers { get; private set; }
+        public int OrderIdIndex { get; private set; }
         public int BarcodeIndex { get; private set; }
         public int WardIdIndex { get; private set; }
 
@@ -27,6 +28,7 @@ namespace GiauTM.CSharp.TikiRouter.Controllers
 
                     Headers = csv.GetFieldHeaders();
 
+                    OrderIdIndex = -1;
                     BarcodeIndex = -1;
                     WardIdIndex = -1;
 
@@ -39,6 +41,10 @@ namespace GiauTM.CSharp.TikiRouter.Controllers
                         else if (Headers[i].ToUpper() == "WARDID")
                         {
                             WardIdIndex = i;
+                        }
+                        else if (Headers[i].ToUpper() == "ID")
+                        {
+                            OrderIdIndex = i;
                         }
                     }
 

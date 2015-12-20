@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GiauTM.CSharp.TikiRouter.Models
+﻿namespace GiauTM.CSharp.TikiRouter.Models
 {
     class Order
     {

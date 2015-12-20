@@ -1,30 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Reflection;
-using System.IO;
-using System.Media;
-using System.Threading;
-using System.Collections;
-
-using LumenWorks.Framework.IO.Csv;
-using GiauTM.CSharp.TikiRouter.Properties;
-using GiauTM.CSharp.TikiRouter.Controllers;
+﻿using GiauTM.CSharp.TikiRouter.Controllers;
 using GiauTM.CSharp.TikiRouter.Models;
+using System;
+using System.Collections;
+using System.Diagnostics;
+using System.Drawing;
+using System.Reflection;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace GiauTM.CSharp.TikiRouter
 {
     public partial class MainForm : Form
     {
+        private static string sOrderUrlCPN = @"http://admin.tiki.vn/index.php/cpn/sales_order/view/order_id/";
         private OrderList mOrders = new OrderList();
         private RouterList mRouters = new RouterList();
         private SessionList mSessions = new SessionList();
 
-        private Hashtable mGroupRouter = new Hashtable();
         private Hashtable mOrderSession = new Hashtable();
         private delegate void MyAction();
 
@@ -33,9 +25,24 @@ namespace GiauTM.CSharp.TikiRouter
             InitializeComponent();
         }
 
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "GiauTM.CSharp.TikiRouter.RouterConfig.csv";
+
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null || !mRouters.importConfig(stream))
+                {
+                    MessageBox.Show("Không tìm thấy tệp tin RouterConfig.csv trong Resource!");
+
+                    Application.Exit();
+                }
+            }
+        }
+
         private void showMessage(string message, bool alert = true)
         {
-
             if (alert)
             {
                 lbMessage.BackColor = Color.Red;
@@ -62,31 +69,26 @@ namespace GiauTM.CSharp.TikiRouter
                 {
                     var session = mSessions.findOrCreateSession(router);
 
-                    if (session.isNew)
+                    var sessionGroup = listViewSessions.Groups[session.name];
+                    if (sessionGroup == null && session.isNew)
                     {
-                        var group = new ListViewGroup(router.name,
-                            HorizontalAlignment.Left);
-
-
-                        mGroupRouter.Add(router.name, group);
-                        listViewSessions.Groups.Add(group);
+                        sessionGroup = listViewSessions.Groups.Add(session.name, session.name);
                     }
 
                     if (session.orders.TrueForAll(o => o.Barcode != order.Barcode))
                     {
+                        session.orders.Add(order);
+
                         // Lưu lại để có thể remove từ danh sách.
                         mOrderSession.Add(order.Barcode, session);
 
-                        session.orders.Add(order);
-                        showMessage(router.name, false);
-
-                        var item = new ListViewItem(order.Fields);
-                        item.Group = (ListViewGroup)mGroupRouter[router.name];
-                        listViewSessions.Items.Add(item);
+                        sessionGroup.Header = string.Format("{0} ({1})", session.name, session.orders.Count);
+                        listViewSessions.Items.Add(new ListViewItem(order.Fields, sessionGroup));
 
                         btnExportSession.Enabled = true;
                         btnClearSessions.Enabled = true;
 
+                        showMessage(router.name, false);
                         Ultis.playAudio(router.name);
                     }
                     else
@@ -111,90 +113,73 @@ namespace GiauTM.CSharp.TikiRouter
             return false;
         }
 
-        private void importData()
+        private void importOrderData()
         {
-            string dummyFile = @"D:\OneDrive\giautm\devel\ws-csharp\Router\Router\bin\Debug\data.csv";
-            if (File.Exists(dummyFile))
-            {
-                if (mOrders.loadCsv(dummyFile))
-                {
-                    showMessage("OK! Scan được rồi.", false);
-                    txtBarcode.Enabled = true;
-                    txtBarcode.Focus();
-                    txtBarcode.SelectAll();
-                }
-            }
-            else
-            {
-                OpenFileDialog dialog = new OpenFileDialog();
+            OpenFileDialog dialog = new OpenFileDialog();
 
-                dialog.InitialDirectory = KnownFolders.GetPath(KnownFolder.Downloads); ;
-                dialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
-                dialog.FilterIndex = 1;
-                dialog.RestoreDirectory = true;
+            dialog.InitialDirectory = KnownFolders.GetPath(KnownFolder.Downloads); ;
+            dialog.Title = "Chọn tập tin xuất từ Redash";
+            dialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+            dialog.FilterIndex = 1;
+            dialog.RestoreDirectory = true;
 
-                if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                try
                 {
-                    try
+                    showMessage("Đang đọc tập tin, vui lòng chờ...", false);
+                    btnImport.Enabled = false;
+
+                    var thread = new Thread(() =>
                     {
-                        btnImport.Enabled = false;
-                        lbMessage.Text = "Đang đọc tập tin, vui lòng chờ...";
-                        var thread = new Thread(() =>
+                        if (mOrders.loadCsv(dialog.FileName))
                         {
-
-                            if (mOrders.loadCsv(dialog.FileName))
+                            listViewSessions.BeginInvoke(new MyAction(() =>
                             {
-                                lbMessage.BeginInvoke(new MyAction(() =>
+                                listViewSessions.Columns.Clear();
+                                foreach (var header in mOrders.Headers)
                                 {
-                                    showMessage("OK! Scan được rồi đó. :)", false);
-                                }));
+                                    listViewSessions.Columns.Add(new ColumnHeader { Text = header, Width = 150 });
+                                }
+                            }));
 
-                                btnImport.BeginInvoke(new MyAction(() =>
-                                {
-                                    btnImport.Enabled = true;
-                                }));
-
-                                txtBarcode.BeginInvoke(new MyAction(() =>
-                                {
-                                    txtBarcode.Enabled = true;
-                                    txtBarcode.Focus();
-                                    txtBarcode.SelectAll();
-                                }));
-
-                                listViewSessions.BeginInvoke(new MyAction(() =>
-                                {
-                                    listViewSessions.Columns.Clear();
-                                    foreach (var header in mOrders.Headers)
-                                    {
-                                        listViewSessions.Columns.Add(new ColumnHeader { Text = header, Width = 100 });
-                                    }
-                                }));
-                            }
-                            else
+                            txtBarcode.BeginInvoke(new MyAction(() =>
                             {
-                                lbMessage.BeginInvoke(new MyAction(() =>
-                                {
-                                    showMessage("Bị lỗi gì rồi thì phải... thử lại nhé! :(");
-                                }));
+                                txtBarcode.Enabled = true;
+                                txtBarcode.Focus();
+                                txtBarcode.SelectAll();
+                            }));
 
-                                btnImport.BeginInvoke(new MyAction(() =>
-                                {
-                                    btnImport.Enabled = true;
-                                }));
-                            }
-                        });
+                            lbMessage.BeginInvoke(new MyAction(() =>
+                            {
+                                showMessage("OK! Scan được rồi đó. :)", false);
+                            }));
+                        }
+                        else
+                        {
+                            lbMessage.BeginInvoke(new MyAction(() =>
+                            {
+                                showMessage("Bị lỗi gì rồi thì phải... thử lại nhé! :(");
+                            }));
+                        }
 
-                        thread.Start();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
-                    }
+                        btnImport.BeginInvoke(new MyAction(() =>
+                        {
+                            btnImport.Enabled = true;
+                        }));
+                    });
+
+                    thread.Start();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
+
         }
 
-        private void exporeSessions()
+        private void exportSessions()
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult result = fbd.ShowDialog();
@@ -232,28 +217,19 @@ namespace GiauTM.CSharp.TikiRouter
             txtBarcode.SelectAll();
         }
 
-        private void menuItem_ExportSessions_Click(object sender, EventArgs e)
-        {
-            exporeSessions();
-        }
-        private void menuItem_ImportData_Click(object sender, EventArgs e)
-        {
-            importData();
-        }
         private void btnImport_Click(object sender, EventArgs e)
         {
-            importData();
+            importOrderData();
         }
 
         private void btnExportSession_Click(object sender, EventArgs e)
         {
-            exporeSessions();
+            exportSessions();
         }
 
         private void btnClearSessions_Click(object sender, EventArgs e)
         {
             mSessions.Clear();
-            mGroupRouter.Clear();
             mOrderSession.Clear();
 
             listViewSessions.Items.Clear();
@@ -261,17 +237,6 @@ namespace GiauTM.CSharp.TikiRouter
 
             btnClearSessions.Enabled = false;
             btnExportSession.Enabled = false;
-        }
-
-        private void listViewSessions_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                if (listViewSessions.FocusedItem.Bounds.Contains(e.Location) == true)
-                {
-                    contextMenuStrip1.Show(Cursor.Position);
-                }
-            }
         }
 
         private void menuItem_RemoveOrderItem_Click(object sender, EventArgs e)
@@ -285,7 +250,6 @@ namespace GiauTM.CSharp.TikiRouter
                     if (mOrderSession.ContainsKey(barcode))
                     {
                         var session = (Session)mOrderSession[barcode];
-
                         if (session != null)
                         {
                             session.orders.RemoveAll(o => o.Barcode == barcode);
@@ -298,23 +262,14 @@ namespace GiauTM.CSharp.TikiRouter
             }
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void listViewSessions_DoubleClick(object sender, EventArgs e)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "GiauTM.CSharp.TikiRouter.RouterConfig.csv";
-
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            var selected = listViewSessions.SelectedItems;
+            if (selected.Count > 0 && mOrders.OrderIdIndex != -1)
             {
-                if (stream == null || !mRouters.importConfig(stream))
-                {
-                    MessageBox.Show("Không tìm thấy tệp tin RouterConfig.csv trong Resource!");
-
-                    Application.Exit();
-                }
+                var orderId = selected[0].SubItems[mOrders.OrderIdIndex].Text;
+                Process.Start(sOrderUrlCPN + orderId);
             }
         }
-
-
-
     }
 }

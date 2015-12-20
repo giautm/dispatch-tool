@@ -1,8 +1,8 @@
 ﻿using GiauTM.CSharp.TikiRouter.Models;
+using LumenWorks.Framework.IO.Csv;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace GiauTM.CSharp.TikiRouter.Controllers
@@ -11,12 +11,19 @@ namespace GiauTM.CSharp.TikiRouter.Controllers
     {
         private List<Session> mSessions = new List<Session>();
 
-        public Session findOrCreateSession(GiauTM.CSharp.TikiRouter.Models.Router router)
+        public Session findOrCreateSession(Router router)
         {
             var session = mSessions.Find(s => s.router != null && s.router.name == router.name);
             if (session == null)
             {
-                session = new Session { name = router.name, router = router, orders = new List<Order>(), isNew = true };
+                session = new Session
+                {
+                    name = router.name,
+                    isNew = true,
+                    router = router,
+                    orders = new List<Order>()
+                };
+
                 mSessions.Add(session);
             }
             else
@@ -35,14 +42,16 @@ namespace GiauTM.CSharp.TikiRouter.Controllers
 
                 foreach (var session in mSessions)
                 {
-                    string fileName = String.Format("{0}_{1}.csv", now.ToString("yyyyyMMdd-HHmmss"), session.name);
+                    string fileName = String.Format("{0}_{1}.csv", session.name, now.ToString("yyyyyMMdd-HHmmss"));
 
                     using (StreamWriter file = new StreamWriter(Path.Combine(folderName, fileName)))
                     {
-                        file.WriteLine("Barcode;Router");
+                        // 'Nói' cho Excel biết là các field được phân cách bằng dấu ','.
+                        file.WriteLine("sep=,");
+                        file.WriteLine("Barcode,Router");
                         foreach (var order in session.orders)
                         {
-                            file.WriteLine("\"{0}\";\"{1}\"", order.Barcode, session.router.name);
+                            file.WriteLine("\"{0}\",\"{1}\"", order.Barcode, session.router.name);
                         }
                     }
                 }
