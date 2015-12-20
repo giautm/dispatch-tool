@@ -28,7 +28,7 @@ namespace GiauTM.CSharp.TikiRouter
         private void MainForm_Load(object sender, EventArgs e)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "GiauTM.CSharp.TikiRouter.RouterConfig.csv";
+            var resourceName = "GiauTM.CSharp.TikiRouter.RouterConfig.tsv";
 
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
