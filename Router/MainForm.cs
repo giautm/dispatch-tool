@@ -91,6 +91,19 @@ namespace GiauTM.CSharp.TikiRouter
                     else
                     {
                         showMessage("Đã scan đơn hàng này rồi. T_T");
+
+                        if (listViewSessions.Items.Count > 0)
+                        {
+                            foreach (ListViewItem item in listViewSessions.Items)
+                            {
+                                if (item.Text == order.Barcode)
+                                {
+                                    item.Selected = true;
+                                    listViewSessions.Select();
+                                    break;
+                                }
+                            }
+                        }
                     }
 
                     return true;
