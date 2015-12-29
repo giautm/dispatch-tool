@@ -50,7 +50,7 @@
             this.txtBarcode.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.txtBarcode.Location = new System.Drawing.Point(13, 61);
             this.txtBarcode.Name = "txtBarcode";
-            this.txtBarcode.Size = new System.Drawing.Size(211, 31);
+            this.txtBarcode.Size = new System.Drawing.Size(208, 31);
             this.txtBarcode.TabIndex = 3;
             this.txtBarcode.Text = "Scan mã ĐH vào đây";
             this.txtBarcode.Click += new System.EventHandler(this.txtBarcode_Click);
@@ -64,17 +64,17 @@
             this.lbMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.lbMessage.Location = new System.Drawing.Point(13, 9);
             this.lbMessage.Name = "lbMessage";
-            this.lbMessage.Size = new System.Drawing.Size(800, 44);
+            this.lbMessage.Size = new System.Drawing.Size(799, 44);
             this.lbMessage.TabIndex = 1;
             this.lbMessage.Text = "Nhập dữ liệu đơn hàng để bắt đầu";
             // 
             // btnImport
             // 
             this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btnImport.Location = new System.Drawing.Point(341, 60);
+            this.btnImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.btnImport.Location = new System.Drawing.Point(341, 61);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(153, 34);
+            this.btnImport.Size = new System.Drawing.Size(153, 31);
             this.btnImport.TabIndex = 0;
             this.btnImport.Text = "Nhập dữ liệu";
             this.btnImport.UseVisualStyleBackColor = true;
@@ -84,10 +84,10 @@
             // 
             this.btnExportSession.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExportSession.Enabled = false;
-            this.btnExportSession.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btnExportSession.Location = new System.Drawing.Point(500, 60);
+            this.btnExportSession.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.btnExportSession.Location = new System.Drawing.Point(500, 61);
             this.btnExportSession.Name = "btnExportSession";
-            this.btnExportSession.Size = new System.Drawing.Size(153, 34);
+            this.btnExportSession.Size = new System.Drawing.Size(153, 31);
             this.btnExportSession.TabIndex = 1;
             this.btnExportSession.Text = "Xuất các phiên";
             this.btnExportSession.UseVisualStyleBackColor = true;
@@ -97,10 +97,10 @@
             // 
             this.btnClearSessions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClearSessions.Enabled = false;
-            this.btnClearSessions.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btnClearSessions.Location = new System.Drawing.Point(659, 60);
+            this.btnClearSessions.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.btnClearSessions.Location = new System.Drawing.Point(659, 61);
             this.btnClearSessions.Name = "btnClearSessions";
-            this.btnClearSessions.Size = new System.Drawing.Size(153, 34);
+            this.btnClearSessions.Size = new System.Drawing.Size(153, 31);
             this.btnClearSessions.TabIndex = 2;
             this.btnClearSessions.Text = "Xoá danh sách";
             this.btnClearSessions.UseVisualStyleBackColor = true;
@@ -119,7 +119,7 @@
             this.listViewSessions.MultiSelect = false;
             this.listViewSessions.Name = "listViewSessions";
             this.listViewSessions.ShowItemToolTips = true;
-            this.listViewSessions.Size = new System.Drawing.Size(799, 199);
+            this.listViewSessions.Size = new System.Drawing.Size(799, 182);
             this.listViewSessions.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewSessions.TabIndex = 6;
             this.listViewSessions.UseCompatibleStateImageBehavior = false;
@@ -143,11 +143,13 @@
             // lbOrderCount
             // 
             this.lbOrderCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbOrderCount.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.lbOrderCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbOrderCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.lbOrderCount.Location = new System.Drawing.Point(230, 61);
+            this.lbOrderCount.Location = new System.Drawing.Point(227, 61);
             this.lbOrderCount.Name = "lbOrderCount";
             this.lbOrderCount.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lbOrderCount.Size = new System.Drawing.Size(105, 31);
+            this.lbOrderCount.Size = new System.Drawing.Size(108, 31);
             this.lbOrderCount.TabIndex = 7;
             this.lbOrderCount.Text = "0 ĐH";
             this.lbOrderCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -157,7 +159,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label1.Location = new System.Drawing.Point(12, 303);
+            this.label1.Location = new System.Drawing.Point(12, 286);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(436, 16);
             this.label1.TabIndex = 8;
@@ -167,7 +169,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(824, 328);
+            this.ClientSize = new System.Drawing.Size(824, 311);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lbOrderCount);
             this.Controls.Add(this.listViewSessions);

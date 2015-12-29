@@ -340,41 +340,16 @@ namespace GiauTM.CSharp.TikiRouter.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to WardId	Router
-        ///10625	01SG-01
-        ///10620	01SG-01
-        ///10621	01SG-01
-        ///10622	01SG-01
-        ///10623	01SG-01
-        ///10615	01SG-02
-        ///10616	01SG-02
-        ///10617	01SG-02
-        ///10618	01SG-02
-        ///10619	01SG-02
-        ///10624	01SG-02
-        ///10613	01SG-02
-        ///10601	01SG-02
-        ///10602	01SG-03
-        ///10603	01SG-03
-        ///10604	01SG-03
-        ///10605	01SG-03
-        ///10606	01SG-04
-        ///10583	01SG-04
-        ///10584	01SG-04
-        ///10571	01SG-04
-        ///10572	01SG-04
-        ///10573	01SG-04
-        ///10574	01SG-04
-        ///10575	01SG-04
-        ///10576	01SG-04
-        ///10404	01SG-05
-        ///10405	01SG-05
-        ///10406	01SG-05
-        ///10407	01SG-05
-        ///10408	01SG-05
-        ///10409	01SG-05
-        ///10410	01SG-05
-        ///10 [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Province	District	Ward	WardId	Router
+        ///Hồ Chí Minh	Quận Tân Phú	Phường Tây Thạnh	10625	01SG-01
+        ///Hồ Chí Minh	Quận Tân Phú	Phường Sơn Kỳ	10620	01SG-01
+        ///Hồ Chí Minh	Quận Tân Phú	Phường Tân Quý	10621	01SG-01
+        ///Hồ Chí Minh	Quận Tân Phú	Phường Tân Sơn Nhì	10622	01SG-01
+        ///Hồ Chí Minh	Quận Tân Phú	Phường Tân Thành	10623	01SG-01
+        ///Hồ Chí Minh	Quận Tân Phú	Phường Hiệp Tân	10615	01SG-02
+        ///Hồ Chí Minh	Quận Tân Phú	Phường Hoà Thạnh	10616	01SG-02
+        ///Hồ Chí Minh	Quận Tân Phú	Phường Phú Thạnh	10617	01SG-02
+        ///Hồ Chí Minh	Quận Tân P [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RouterConfig {
             get {

@@ -16,7 +16,7 @@ namespace GiauTM.CSharp.TikiRouter.Controllers
         public int BarcodeIndex { get; private set; }
         public int WardIdIndex { get; private set; }
 
-        public bool loadCsv(string fileName)
+        public bool LoadFromCSV(string fileName)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace GiauTM.CSharp.TikiRouter.Controllers
             return false;
         }
 
-        public Order findOrder(string barcode)
+        public Order FindOrderByBarcode(string barcode)
         {
             return mOrders.Find(o => o.Barcode == barcode);
         }

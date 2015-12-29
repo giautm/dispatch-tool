@@ -4,7 +4,9 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Reflection;
+using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -19,7 +21,7 @@ namespace GiauTM.CSharp.TikiRouter
 
         private Hashtable mOrderSession = new Hashtable();
         private delegate void MyAction();
-        private int mOrderCount = 0;
+        private int mOrdersCount = 0;
         public MainForm()
         {
             InitializeComponent();
@@ -27,17 +29,10 @@ namespace GiauTM.CSharp.TikiRouter
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "GiauTM.CSharp.TikiRouter.RouterConfig.tsv";
-
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            if (!mRouters.ImportConfig(@"./RouterConfig.tsv"))
             {
-                if (stream == null || !mRouters.importConfig(stream))
-                {
-                    MessageBox.Show("Không tìm thấy tệp tin RouterConfig.csv trong Resource!");
-
-                    Application.Exit();
-                }
+                MessageBox.Show("Không tìm thấy tệp tin RouterConfig.tsv!");
+                Application.Exit();
             }
         }
 
@@ -60,38 +55,38 @@ namespace GiauTM.CSharp.TikiRouter
 
         private bool addOrder(string barcode)
         {
-            var order = mOrders.findOrder(barcode);
+            var order = mOrders.FindOrderByBarcode(barcode);
             if (order != null)
             {
-                var router = mRouters.findRouter(order.WardId);
+                var router = mRouters.FindRouterByWardId(order.WardId);
 
                 if (router != null)
                 {
-                    var session = mSessions.findOrCreateSession(router);
+                    var session = mSessions.FindOrCreateSession(router);
 
-                    var sessionGroup = listViewSessions.Groups[session.name];
-                    if (sessionGroup == null && session.isNew)
+                    var sessionGroup = listViewSessions.Groups[session.Name];
+                    if (sessionGroup == null && session.IsNew)
                     {
-                        sessionGroup = listViewSessions.Groups.Add(session.name, session.name);
+                        sessionGroup = listViewSessions.Groups.Add(session.Name, session.Name);
                     }
 
-                    if (session.orders.TrueForAll(o => o.Barcode != order.Barcode))
+                    if (session.Orders.TrueForAll(o => o.Barcode != order.Barcode))
                     {
-                        session.orders.Add(order);
+                        session.Orders.Add(order);
 
                         // Lưu lại để có thể remove từ danh sách.
                         mOrderSession.Add(order.Barcode, session);
 
-                        sessionGroup.Header = string.Format("{0} ({1})", session.name, session.orders.Count);
+                        sessionGroup.Header = string.Format("{0} ({1} đơn hàng)", session.Name, session.Orders.Count);
                         listViewSessions.Items.Add(new ListViewItem(order.Fields, sessionGroup));
 
                         btnExportSession.Enabled = true;
                         btnClearSessions.Enabled = true;
 
-                        showMessage(router.name, false);
-                        Ultis.playAudio(router.name);
+                        showMessage(router.Name, false);
+                        Ultis.playRouter(router.Name);
 
-                        lbOrderCount.Text = string.Format("{0} ĐH", ++mOrderCount);
+                        lbOrderCount.Text = string.Format("{0} ĐH", ++mOrdersCount);
                     }
                     else
                     {
@@ -103,19 +98,19 @@ namespace GiauTM.CSharp.TikiRouter
                 else
                 {
                     showMessage("Không tìm thấy tuyến.");
-                    Ultis.playAudio("NOTFOUND");
+                    Ultis.playNotFound();
                 }
             }
             else
             {
                 showMessage("Không tìm thấy đơn hàng.");
-                Ultis.playAudio("NOTFOUND");
+                Ultis.playNotFound();
             }
 
             return false;
         }
 
-        private void importOrderData()
+        private void ImportOrderData()
         {
             OpenFileDialog dialog = new OpenFileDialog();
 
@@ -134,7 +129,7 @@ namespace GiauTM.CSharp.TikiRouter
 
                     var thread = new Thread(() =>
                     {
-                        if (mOrders.loadCsv(dialog.FileName))
+                        if (mOrders.LoadFromCSV(dialog.FileName))
                         {
                             listViewSessions.BeginInvoke(new MyAction(() =>
                             {
@@ -180,15 +175,34 @@ namespace GiauTM.CSharp.TikiRouter
             }
 
         }
-
-        private void exportSessions()
+        private string makeExportPath()
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            DialogResult result = fbd.ShowDialog();
-
-            if (result == DialogResult.OK)
+            var root = @"D:\NHAP_HANG";
+            if (!Directory.Exists(root))
             {
-                if (mSessions.exportTo(fbd.SelectedPath))
+                Directory.CreateDirectory(root);
+            }
+
+            var now = DateTime.Now;
+            var path = Path.Combine(root, now.ToString("yyyy-MM-dd"));
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            return path;
+        }
+        private void ExportSessions()
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.ShowNewFolderButton = true;
+            dialog.SelectedPath = makeExportPath();
+
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                if (mSessions.ExportToExcelCSV(dialog.SelectedPath))
                 {
                     showMessage("Xuất danh các phiên thành công!", false);
                 }
@@ -221,19 +235,19 @@ namespace GiauTM.CSharp.TikiRouter
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            importOrderData();
+            ImportOrderData();
         }
 
         private void btnExportSession_Click(object sender, EventArgs e)
         {
-            exportSessions();
+            ExportSessions();
         }
 
         private void btnClearSessions_Click(object sender, EventArgs e)
         {
             mSessions.Clear();
             mOrderSession.Clear();
-            mOrderCount = 0;
+            mOrdersCount = 0;
             lbOrderCount.Text = string.Format("{0} ĐH", 0);
 
             listViewSessions.Items.Clear();
@@ -256,12 +270,12 @@ namespace GiauTM.CSharp.TikiRouter
                         var session = (Session)mOrderSession[barcode];
                         if (session != null)
                         {
-                            session.orders.RemoveAll(o => o.Barcode == barcode);
+                            session.Orders.RemoveAll(o => o.Barcode == barcode);
                             mOrderSession.Remove(barcode);
 
-                            if (mOrderCount > 0)
+                            if (mOrdersCount > 0)
                             {
-                                lbOrderCount.Text = string.Format("{0} ĐH", --mOrderCount);
+                                lbOrderCount.Text = string.Format("{0} ĐH", --mOrdersCount);
                             }
                         }
                     }

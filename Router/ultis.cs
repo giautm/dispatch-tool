@@ -5,17 +5,28 @@ namespace GiauTM.CSharp.TikiRouter
 {
     public static class Ultis
     {
-        public static void playAudio(string name)
+        private static bool playAudio(string name)
         {
-            name = name.ToUpper();
-            if (name != "NOTFOUND")
+            var stream = Resources.ResourceManager.GetStream(name);
+            if (stream != null)
             {
-                name = "_" + name.Replace("-", "_");
+                var player = new SoundPlayer(stream);
+                player.Play();
+                return true;
             }
 
-            var stream = Resources.ResourceManager.GetStream(name);
-            var player = new SoundPlayer(stream);
-            player.Play();
+            return false;
+        }
+
+        public static bool playNotFound()
+        {
+            return playAudio("NOTFOUND");
+        }
+
+        public static bool playRouter(string name) {
+            var soundName = '_' + name.ToUpper().Replace('-', '_');
+
+            return playAudio(soundName);
         }
     }
 }

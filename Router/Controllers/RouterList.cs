@@ -10,15 +10,16 @@ namespace GiauTM.CSharp.TikiRouter.Controllers
     class RouterList
     {
         private List<Router> mRouters = new List<Router>();
-        public bool importConfig(string fileName)
+
+        public bool ImportConfig(string fileName)
         {
             using (var stream = File.Open(fileName, FileMode.Open))
             {
-                return importConfig(stream);
+                return ImportConfig(stream);
             }
         }
 
-        public bool importConfig(Stream file)
+        public bool ImportConfig(Stream file)
         {
             using (CsvReader csv = new CsvReader(new StreamReader(file), true, '\t'))
             {
@@ -56,14 +57,14 @@ namespace GiauTM.CSharp.TikiRouter.Controllers
                     {
                         router = new Router
                         {
-                            name = routerName,
-                            wards = new List<string> { csv[idxWardId] }
+                            Name = routerName,
+                            Wards = new List<string> { csv[idxWardId] }
                         };
 
                         routerWardId.Add(routerName, router);
                     }
 
-                    router.wards.Add(csv[idxWardId]);
+                    router.Wards.Add(csv[idxWardId]);
                 }
 
                 Router[] temp = new Router[routerWardId.Count];
@@ -76,9 +77,9 @@ namespace GiauTM.CSharp.TikiRouter.Controllers
             }
         }
 
-        public Router findRouter(string wardId)
+        public Router FindRouterByWardId(string wardId)
         {
-            return mRouters.Find(r => r.wards.Contains(wardId));
+            return mRouters.Find(r => r.Wards.Contains(wardId));
         }
     }
 }
